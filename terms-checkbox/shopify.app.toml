@@ -6,7 +6,6 @@ application_url = "https://shopterm-production.up.railway.app"
 embedded = true
 
 [build]
-include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-01"
@@ -18,6 +17,7 @@ api_version = "2026-01"
 
 [access_scopes]
 scopes = "read_orders,read_customers"
+use_legacy_install_flow = false
 
 [auth]
 redirect_urls = [
