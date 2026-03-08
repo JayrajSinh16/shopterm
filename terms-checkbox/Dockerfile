@@ -30,8 +30,10 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/public ./public
 COPY package.json ./
+COPY start.sh ./
+RUN chmod +x start.sh
 
+# Railway injects $PORT at runtime; expose it here for documentation
 EXPOSE 3000
 
-# Run migrations then start the server
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
+CMD ["sh", "start.sh"]
