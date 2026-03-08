@@ -12,7 +12,8 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { getTodayCount, getTotalCount, getWeeklyTrend } from "../models/Analytics.server";
-import { getPlan, PLANS } from "../models/Subscription.server";
+import { PLANS } from "../models/subscription.constants";
+import { getPlan } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);

@@ -7,7 +7,7 @@
  * redirect response — no UI is rendered here.
  */
 import { authenticate } from "../shopify.server";
-import { PRO_PLAN_NAME } from "../models/Subscription.server";
+import { PRO_PLAN_NAME } from "../models/subscription.constants";
 
 export const loader = async ({ request }) => {
   const { billing } = await authenticate.admin(request);

@@ -16,7 +16,8 @@ import { json } from "@remix-run/node";
 import crypto from "crypto";
 import { authenticate } from "../shopify.server";
 import { createLog, getLogs, enforceLogLimit } from "../models/ConsentLog.server";
-import { getPlan, PLANS, FREE_LOG_LIMIT } from "../models/Subscription.server";
+import { PLANS, FREE_LOG_LIMIT } from "../models/subscription.constants";
+import { getPlan } from "../models/Subscription.server";
 
 // ── POST: Log consent (called from storefront via App Proxy OR checkout extension) ──
 export async function action({ request }) {

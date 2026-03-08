@@ -20,7 +20,8 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { getLogs } from "../models/ConsentLog.server";
-import { getPlan, PLANS, FREE_LOG_LIMIT } from "../models/Subscription.server";
+import { PLANS, FREE_LOG_LIMIT } from "../models/subscription.constants";
+import { getPlan } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);

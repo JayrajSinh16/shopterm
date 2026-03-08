@@ -1,13 +1,8 @@
 import db from "../db.server";
 import { getSettings } from "./Settings.server";
+import { PLANS, PRO_PLAN_NAME, FREE_LOG_LIMIT } from "./subscription.constants";
 
-export const PLANS = {
-  FREE: "free",
-  PRO: "pro",
-};
-
-export const PRO_PLAN_NAME = "Pro Plan";
-export const FREE_LOG_LIMIT = 50;
+export { PLANS, PRO_PLAN_NAME, FREE_LOG_LIMIT };
 
 /**
  * Get the current plan for a shop.

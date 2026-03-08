@@ -19,7 +19,8 @@ import {
 import { authenticate } from "../shopify.server";
 import { getSettings } from "../models/Settings.server";
 import { getTodayCount, getTotalCount, getRecentLogs } from "../models/Analytics.server";
-import { getPlan, PLANS, FREE_LOG_LIMIT } from "../models/Subscription.server";
+import { PLANS, FREE_LOG_LIMIT } from "../models/subscription.constants";
+import { getPlan } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);

@@ -8,7 +8,8 @@
 
 import { authenticate } from "../shopify.server";
 import { exportLogs } from "../models/ConsentLog.server";
-import { getPlan, PLANS } from "../models/Subscription.server";
+import { PLANS } from "../models/subscription.constants";
+import { getPlan } from "../models/Subscription.server";
 
 export async function loader({ request }) {
   const { session } = await authenticate.admin(request);

@@ -23,7 +23,8 @@ import {
 import { authenticate } from "../shopify.server";
 import { getSettings, updateSettings } from "../models/Settings.server";
 import { CheckboxPreview } from "../components/CheckboxPreview";
-import { getPlan, PLANS } from "../models/Subscription.server";
+import { PLANS } from "../models/subscription.constants";
+import { getPlan } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
