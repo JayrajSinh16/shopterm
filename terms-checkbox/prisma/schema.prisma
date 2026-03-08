@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // Use "sqlite" for development, switch to "postgresql" for production
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Required by Shopify App Remix template for session storage
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator         Boolean?  @default(false)
+  emailVerified        Boolean?  @default(false)
+  refreshToken         String?
+  refreshTokenExpires  DateTime?
+}
+
+// Per-store app configuration
+model AppSettings {
+  id                   String   @id @default(cuid())
+  shop                 String   @unique
+  enabled              Boolean  @default(true)
+  checkboxRequired     Boolean  @default(true)
+  messageText          String   @default("I accept the")
+  linkText             String   @default("terms and conditions")
+  linkUrl              String   @default("/policies/terms-of-service")
+  errorMessage         String   @default("You must agree to the terms and conditions before checking out.")
+  position             String   @default("above_checkout")
+  // position values: "above_checkout" | "below_checkout" | "custom"
+  fontSize             Int      @default(14)
+  checkboxColor        String   @default("#000000")
+  errorColor           String   @default("#dc3545")
+  logConsent           Boolean  @default(true)
+  blockExpressCheckout Boolean  @default(true)
+  fontColor            String   @default("#333333")
+  linkColor            String   @default("#2c6ecb")
+  linkUnderline        Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+// Consent records — one row per checkbox agreement
+model ConsentLog {
+  id              String   @id @default(cuid())
+  shop            String
+  customerId      String?
+  customerEmail   String?
+  cartToken       String?
+  ipAddress       String?
+  userAgent       String?
+  consentGiven    Boolean  @default(true)
+  pageUrl         String?
+  checkboxVersion String?  // Stores snapshot of message at time of consent
+  timestamp       DateTime @default(now())
+
+  @@index([shop])
+  @@index([shop, timestamp])
+  @@index([shop, customerEmail])
+}

@@ -1,0 +1,10 @@
+api_version = "2024-10"
+
+[[extensions]]
+uid = "9501a15f-ce35-701a-f0e3-5bdfd2f16a006890e2e3"
+type = "theme"
+name = "T&C Checkbox"
+handle = "tc-checkbox"
+
+  [extensions.capabilities]
+  block_progress = false

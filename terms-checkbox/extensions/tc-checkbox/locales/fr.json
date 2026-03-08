@@ -1,0 +1,48 @@
+{
+  "checkbox": {
+    "name": "Case CGV",
+    "inline_name": "Case CGV (en ligne)",
+    "settings": {
+      "required": {
+        "label": "Obligatoire pour passer à la caisse",
+        "info": "Lorsque cette option est activée, les clients ne peuvent pas passer commande sans cocher cette case."
+      },
+      "block_express_checkout": {
+        "label": "Bloquer les boutons de paiement express (PayPal, Apple Pay, Shop Pay)"
+      },
+      "log_consent": {
+        "label": "Enregistrer les horodatages de consentement",
+        "info": "Enregistre la date, l'heure et les informations du client lorsque la case est cochée."
+      },
+      "message_text": {
+        "label": "Texte du message (avant le lien)",
+        "info": "Ex. : 'J'ai lu et j'accepte les'"
+      },
+      "link_text": {
+        "label": "Texte du lien"
+      },
+      "link_url": {
+        "label": "URL du lien",
+        "info": "URL de votre page de conditions générales ou de politique de confidentialité."
+      },
+      "error_message": {
+        "label": "Message d'erreur"
+      },
+      "font_size": {
+        "label": "Taille de police"
+      },
+      "checkbox_color": {
+        "label": "Couleur d'accentuation de la case",
+        "info": "Couleur d'arrière-plan et de bordure lorsque la case est cochée."
+      },
+      "error_color": {
+        "label": "Couleur du message d'erreur"
+      }
+    },
+    "defaults": {
+      "message_text": "J'accepte les",
+      "link_text": "conditions générales",
+      "error_message": "Vous devez accepter les conditions générales avant de passer à la caisse."
+    }
+  }
+}

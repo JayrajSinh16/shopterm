@@ -1,0 +1,48 @@
+{
+  "checkbox": {
+    "name": "Casilla de T&C",
+    "inline_name": "Casilla de T&C (en línea)",
+    "settings": {
+      "required": {
+        "label": "Obligatorio para proceder al pago",
+        "info": "Cuando está activado, los clientes no pueden pagar hasta que marquen esta casilla."
+      },
+      "block_express_checkout": {
+        "label": "Bloquear botones de pago exprés (PayPal, Apple Pay, Shop Pay)"
+      },
+      "log_consent": {
+        "label": "Registrar marcas de tiempo de consentimiento",
+        "info": "Registra la fecha, hora e información del cliente cuando se marca la casilla."
+      },
+      "message_text": {
+        "label": "Texto del mensaje (antes del enlace)",
+        "info": "Ej. 'He leído y acepto los'"
+      },
+      "link_text": {
+        "label": "Texto del enlace"
+      },
+      "link_url": {
+        "label": "URL del enlace",
+        "info": "URL de su página de términos de servicio o política de privacidad."
+      },
+      "error_message": {
+        "label": "Mensaje de error"
+      },
+      "font_size": {
+        "label": "Tamaño de fuente"
+      },
+      "checkbox_color": {
+        "label": "Color de acento de la casilla",
+        "info": "Color de fondo y borde cuando la casilla está marcada."
+      },
+      "error_color": {
+        "label": "Color del mensaje de error"
+      }
+    },
+    "defaults": {
+      "message_text": "Acepto los",
+      "link_text": "términos y condiciones",
+      "error_message": "Debes aceptar los términos y condiciones antes de realizar el pago."
+    }
+  }
+}

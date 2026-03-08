@@ -1,0 +1,4 @@
+{
+  "name": "T&C Checkout Checkbox",
+  "description": "Adds a terms and conditions checkbox to the checkout page. Blocks payment until the customer agrees."
+}

@@ -1,0 +1,64 @@
+api_version = "2025-04"
+
+[[extensions]]
+uid = "cec6f14c-f675-3aec-e115-7cffe7f90e6975086dd9"
+type = "ui_extension"
+name = "T&C Checkout Checkbox"
+handle = "tc-checkout"
+
+  [[extensions.targeting]]
+  target = "purchase.checkout.block.render"
+  module = "./src/Checkout.jsx"
+
+  [extensions.capabilities]
+  block_progress = true
+  api_access = true
+  network_access = true
+
+  [extensions.settings]
+    [[extensions.settings.fields]]
+    key = "message_text"
+    type = "single_line_text_field"
+    name = "Message text (before the link)"
+    description = "E.g. 'I have read and agree to the'"
+
+    [[extensions.settings.fields]]
+    key = "link_text"
+    type = "single_line_text_field"
+    name = "Link text"
+    description = "E.g. 'terms and conditions'"
+
+    [[extensions.settings.fields]]
+    key = "link_url"
+    type = "single_line_text_field"
+    name = "Link URL"
+    description = "URL to your terms of service page. E.g. /policies/terms-of-service"
+
+    [[extensions.settings.fields]]
+    key = "error_message"
+    type = "single_line_text_field"
+    name = "Error message"
+    description = "Shown when customer tries to complete checkout without agreeing"
+
+    [[extensions.settings.fields]]
+    key = "required"
+    type = "boolean"
+    name = "Required to complete checkout"
+
+    [[extensions.settings.fields]]
+    key = "font_size"
+    type = "single_line_text_field"
+    name = "Font size"
+    description = "Options: extraSmall, small, medium, large, extraLarge. Default: small"
+
+    [[extensions.settings.fields]]
+    key = "font_appearance"
+    type = "single_line_text_field"
+    name = "Text appearance"
+    description = "Options: default, subdued, accent, info, success, warning, critical. Default: default"
+
+    [[extensions.settings.fields]]
+    key = "link_appearance"
+    type = "single_line_text_field"
+    name = "Link style"
+    description = "Options: default (themed link color), monochrome (matches text color). Default: default"

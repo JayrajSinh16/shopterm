@@ -1,0 +1,48 @@
+{
+  "checkbox": {
+    "name": "T&C Checkbox",
+    "inline_name": "T&C Checkbox (Inline)",
+    "settings": {
+      "required": {
+        "label": "Required to proceed to checkout",
+        "info": "When enabled, customers cannot checkout until this box is checked."
+      },
+      "block_express_checkout": {
+        "label": "Block express checkout buttons (PayPal, Apple Pay, Shop Pay)"
+      },
+      "log_consent": {
+        "label": "Log consent timestamps",
+        "info": "Records the date, time, and customer info when the box is checked."
+      },
+      "message_text": {
+        "label": "Message text (before the link)",
+        "info": "E.g. 'I have read and agree to the'"
+      },
+      "link_text": {
+        "label": "Link text"
+      },
+      "link_url": {
+        "label": "Link URL",
+        "info": "URL to your terms of service or privacy policy page."
+      },
+      "error_message": {
+        "label": "Error message"
+      },
+      "font_size": {
+        "label": "Font size"
+      },
+      "checkbox_color": {
+        "label": "Checkbox accent colour",
+        "info": "Background and border colour when the checkbox is checked."
+      },
+      "error_color": {
+        "label": "Error message colour"
+      }
+    },
+    "defaults": {
+      "message_text": "I accept the",
+      "link_text": "terms and conditions",
+      "error_message": "You must agree to the terms and conditions before checking out."
+    }
+  }
+}

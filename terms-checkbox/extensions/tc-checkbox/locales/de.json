@@ -1,0 +1,48 @@
+{
+  "checkbox": {
+    "name": "AGB-Checkbox",
+    "inline_name": "AGB-Checkbox (Inline)",
+    "settings": {
+      "required": {
+        "label": "Pflichtfeld für den Checkout",
+        "info": "Wenn aktiviert, können Kunden nicht zur Kasse gehen, bis diese Box angehakt ist."
+      },
+      "block_express_checkout": {
+        "label": "Express-Checkout-Buttons sperren (PayPal, Apple Pay, Shop Pay)"
+      },
+      "log_consent": {
+        "label": "Einwilligungszeitstempel protokollieren",
+        "info": "Zeichnet Datum, Uhrzeit und Kundeninformationen auf, wenn die Box angehakt wird."
+      },
+      "message_text": {
+        "label": "Nachrichtentext (vor dem Link)",
+        "info": "Z.B. 'Ich habe gelesen und akzeptiere die'"
+      },
+      "link_text": {
+        "label": "Linktext"
+      },
+      "link_url": {
+        "label": "Link-URL",
+        "info": "URL zu Ihrer AGB- oder Datenschutzseite."
+      },
+      "error_message": {
+        "label": "Fehlermeldung"
+      },
+      "font_size": {
+        "label": "Schriftgröße"
+      },
+      "checkbox_color": {
+        "label": "Akzentfarbe der Checkbox",
+        "info": "Hintergrund- und Rahmenfarbe wenn die Checkbox angehakt ist."
+      },
+      "error_color": {
+        "label": "Farbe der Fehlermeldung"
+      }
+    },
+    "defaults": {
+      "message_text": "Ich akzeptiere die",
+      "link_text": "Allgemeinen Geschäftsbedingungen",
+      "error_message": "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen, bevor Sie fortfahren können."
+    }
+  }
+}

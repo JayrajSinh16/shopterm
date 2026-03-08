@@ -1,0 +1,157 @@
+{% comment %}
+  T&C Checkbox — Inline Variant
+  ──────────────────────────────────────────────────────────────────────────────
+  Compact version designed for drawer/slide-out carts and tight spaces.
+  Available on ALL templates so it can be placed in drawer cart sections.
+  Uses the same JS and CSS assets as the main checkbox block.
+{% endcomment %}
+
+{{ 'tc-checkbox.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="tc-checkbox-wrapper tc-checkbox-wrapper--inline"
+  id="tc-checkbox-wrapper"
+  data-required="{{ block.settings.required }}"
+  data-error-message="{{ block.settings.error_message | escape }}"
+  data-log-consent="{{ block.settings.log_consent }}"
+  data-shop="{{ shop.permanent_domain }}"
+  data-proxy-url="{{ shop.url }}/apps/tc-consent"
+  data-block-express="{{ block.settings.block_express_checkout }}"
+  style="
+    --tc-checkbox-color: {{ block.settings.checkbox_color }};
+    --tc-error-color: {{ block.settings.error_color }};
+    --tc-font-size: {{ block.settings.font_size }}px;
+    --tc-text-color: {{ block.settings.font_color }};
+    --tc-link-color: {{ block.settings.link_color }};
+    --tc-link-underline: {% if block.settings.link_underline %}underline{% else %}none{% endif %};
+  "
+  {{ block.shopify_attributes }}
+>
+  <label class="tc-checkbox-label" for="tc-agree-checkbox-inline">
+    <input
+      type="checkbox"
+      id="tc-agree-checkbox-inline"
+      class="tc-checkbox-input"
+      name="tc-agree"
+      aria-required="{{ block.settings.required }}"
+      aria-describedby="tc-error-message-inline"
+    />
+    <span class="tc-checkbox-custom" aria-hidden="true"></span>
+    <span class="tc-checkbox-text">
+      {{- block.settings.message_text -}}
+      {% if block.settings.link_url != blank %}
+        <a
+          href="{{ block.settings.link_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tc-checkbox-link"
+        >{{- block.settings.link_text -}}</a>
+      {% endif %}
+    </span>
+  </label>
+
+  <div
+    class="tc-error-message"
+    id="tc-error-message-inline"
+    role="alert"
+    aria-live="assertive"
+    style="display: none;"
+  >
+    {{- block.settings.error_message -}}
+  </div>
+</div>
+
+<script src="{{ 'tc-checkbox.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "T&C Checkbox (Inline)",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["*"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "required",
+      "label": "Required to checkout",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "block_express_checkout",
+      "label": "Block express checkout buttons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "log_consent",
+      "label": "Log consent timestamps",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "message_text",
+      "label": "Message text",
+      "default": "I accept the"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "terms and conditions"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Error message",
+      "default": "You must agree to the terms and conditions before checking out."
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "checkbox_color",
+      "label": "Checkbox accent colour",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "error_color",
+      "label": "Error colour",
+      "default": "#dc3545"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Label text colour",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link colour",
+      "default": "#2c6ecb"
+    },
+    {
+      "type": "checkbox",
+      "id": "link_underline",
+      "label": "Underline the T&C link",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

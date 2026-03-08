@@ -1,0 +1,183 @@
+{% comment %}
+  T&C Drawer Checkbox — App Embed Block
+  ──────────────────────────────────────────────────────────────────────────────
+  This app embed block loads the T&C checkbox CSS and JS globally across the
+  entire storefront. It enables the checkbox to appear inside the cart drawer
+  (slide-out cart) on any page — not just the cart template.
+
+  The JS dynamically detects when the cart drawer opens and injects a checkbox
+  above the checkout button. It blocks checkout until the box is checked.
+
+  Enable this in: Theme Editor → App Embeds → T&C Drawer Checkbox
+{% endcomment %}
+
+{{ 'tc-checkbox.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="tc-checkbox-wrapper"
+  id="tc-checkbox-wrapper-drawer-config"
+  data-required="{{ block.settings.required }}"
+  data-error-message="{{ block.settings.error_message | escape }}"
+  data-log-consent="{{ block.settings.log_consent }}"
+  data-shop="{{ shop.permanent_domain }}"
+  data-proxy-url="{{ shop.url }}/apps/tc-consent"
+  data-block-express="{{ block.settings.block_express_checkout }}"
+  data-message-text="{{ block.settings.message_text | escape }}"
+  data-link-text="{{ block.settings.link_text | escape }}"
+  data-link-url="{{ block.settings.link_url | escape }}"
+  style="
+    --tc-checkbox-color: {{ block.settings.checkbox_color }};
+    --tc-error-color: {{ block.settings.error_color }};
+    --tc-font-size: {{ block.settings.font_size }}px;
+    --tc-text-color: {{ block.settings.font_color }};
+    --tc-link-color: {{ block.settings.link_color }};
+    --tc-link-underline: {% if block.settings.link_underline %}underline{% else %}none{% endif %};
+    --tc-max-width: 100%;
+    display: none;
+  "
+  data-alignment="left"
+  data-drawer-only="true"
+  {{ block.shopify_attributes }}
+>
+  <div class="tc-checkbox-label">
+    <label for="tc-agree-checkbox" class="tc-checkbox-toggle">
+      <input
+        type="checkbox"
+        id="tc-agree-checkbox"
+        class="tc-checkbox-input"
+        name="tc-agree"
+        aria-required="{{ block.settings.required }}"
+        aria-describedby="tc-error-message"
+      />
+      <span class="tc-checkbox-custom" aria-hidden="true"></span>
+    </label>
+    <span class="tc-checkbox-text">
+      {{- block.settings.message_text -}}
+      {% if block.settings.link_url != blank %}
+        <a
+          href="{{ block.settings.link_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tc-checkbox-link"
+        >{{- block.settings.link_text -}}</a>
+      {% else %}
+        <span class="tc-checkbox-link">{{- block.settings.link_text -}}</span>
+      {% endif %}
+    </span>
+  </div>
+
+  <div
+    class="tc-error-message"
+    id="tc-error-message"
+    role="alert"
+    aria-live="assertive"
+    style="display: none;"
+  >
+    {{- block.settings.error_message -}}
+  </div>
+</div>
+
+<script src="{{ 'tc-checkbox.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "T&C Drawer Checkbox",
+  "target": "body",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Checkbox Behaviour"
+    },
+    {
+      "type": "checkbox",
+      "id": "required",
+      "label": "Required to proceed to checkout",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "block_express_checkout",
+      "label": "Block express checkout buttons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "log_consent",
+      "label": "Log consent timestamps",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Message"
+    },
+    {
+      "type": "text",
+      "id": "message_text",
+      "label": "Message text (before the link)",
+      "default": "I accept the"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "terms and conditions"
+    },
+    {
+      "type": "text",
+      "id": "link_url",
+      "label": "Link URL (e.g. /policies/terms-of-service)",
+      "default": "/policies/terms-of-service"
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Error message",
+      "default": "You must agree to the terms and conditions before checking out."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "checkbox_color",
+      "label": "Checkbox accent colour",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "error_color",
+      "label": "Error message colour",
+      "default": "#dc3545"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Label text colour",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link colour",
+      "default": "#2c6ecb"
+    },
+    {
+      "type": "checkbox",
+      "id": "link_underline",
+      "label": "Underline the T&C link",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

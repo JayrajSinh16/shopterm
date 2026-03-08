@@ -1,0 +1,69 @@
+{% comment %}
+  tc-checkbox-core.liquid
+  ──────────────────────────────────────────────────────────────────────────────
+  Shared markup for the T&C checkbox. Can be rendered via the blocks, or
+  directly in a theme snippet using:
+    {% render 'tc-checkbox-core',
+       required: true,
+       message_text: 'I accept the',
+       link_text: 'terms and conditions',
+       link_url: '/policies/terms-of-service',
+       error_message: 'Please agree to the terms.',
+       font_size: 14,
+       checkbox_color: '#000000',
+       error_color: '#dc3545',
+       log_consent: true,
+       block_express: true
+    %}
+{% endcomment %}
+
+<div
+  class="tc-checkbox-wrapper"
+  id="tc-checkbox-wrapper"
+  data-required="{{ required | default: true }}"
+  data-error-message="{{ error_message | escape }}"
+  data-log-consent="{{ log_consent | default: true }}"
+  data-shop="{{ shop.permanent_domain }}"
+  data-proxy-url="{{ shop.url }}/apps/tc-consent"
+  data-block-express="{{ block_express | default: true }}"
+  style="
+    --tc-checkbox-color: {{ checkbox_color | default: '#000000' }};
+    --tc-error-color: {{ error_color | default: '#dc3545' }};
+    --tc-font-size: {{ font_size | default: 14 }}px;
+  "
+>
+  <div class="tc-checkbox-label">
+    <label for="tc-agree-checkbox" class="tc-checkbox-toggle">
+      <input
+        type="checkbox"
+        id="tc-agree-checkbox"
+        class="tc-checkbox-input"
+        name="tc-agree"
+        aria-required="{{ required | default: true }}"
+        aria-describedby="tc-error-message"
+      />
+      <span class="tc-checkbox-custom" aria-hidden="true"></span>
+    </label>
+    <span class="tc-checkbox-text">
+      {{- message_text | default: 'I accept the' -}}
+      {% if link_url != blank %}
+        <a
+          href="{{ link_url }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tc-checkbox-link"
+        >{{- link_text | default: 'terms and conditions' -}}</a>
+      {% endif %}
+    </span>
+  </div>
+
+  <div
+    class="tc-error-message"
+    id="tc-error-message"
+    role="alert"
+    aria-live="assertive"
+    style="display: none;"
+  >
+    {{- error_message | default: 'You must agree to the terms and conditions.' -}}
+  </div>
+</div>
