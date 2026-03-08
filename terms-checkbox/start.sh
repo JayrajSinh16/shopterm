@@ -5,7 +5,7 @@ echo "================================================"
 echo " Terms & Conditions Checkbox — Starting up"
 echo "================================================"
 echo "NODE_ENV : ${NODE_ENV}"
-echo "PORT     : ${PORT:-3000}"
+echo "PORT     : ${PORT}"
 
 # Fail fast if required env vars are missing
 if [ -z "$DATABASE_URL" ]; then

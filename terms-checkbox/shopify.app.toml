@@ -2,7 +2,7 @@
 
 client_id = "b9b2c88844fc30bd52fe6077f845be67"
 name = "Terms & Conditions Checkbox"
-application_url = "https://creation-dts-bike-headed.trycloudflare.com"
+application_url = "https://shopterm-production.up.railway.app"
 embedded = true
 
 [build]
@@ -12,22 +12,22 @@ include_config_on_deploy = true
 api_version = "2026-01"
 
   [webhooks.privacy_compliance]
-  customer_deletion_url = "https://creation-dts-bike-headed.trycloudflare.com/webhooks"
-  customer_data_request_url = "https://creation-dts-bike-headed.trycloudflare.com/webhooks"
-  shop_deletion_url = "https://creation-dts-bike-headed.trycloudflare.com/webhooks"
+  customer_deletion_url = "https://shopterm-production.up.railway.app/webhooks"
+  customer_data_request_url = "https://shopterm-production.up.railway.app/webhooks"
+  shop_deletion_url = "https://shopterm-production.up.railway.app/webhooks"
 
 [access_scopes]
 scopes = "read_orders,read_customers"
 
 [auth]
 redirect_urls = [
-  "https://creation-dts-bike-headed.trycloudflare.com/auth/callback",
-  "https://creation-dts-bike-headed.trycloudflare.com/auth/shopify/callback",
-  "https://creation-dts-bike-headed.trycloudflare.com/api/auth/callback",
+  "https://shopterm-production.up.railway.app/auth/callback",
+  "https://shopterm-production.up.railway.app/auth/shopify/callback",
+  "https://shopterm-production.up.railway.app/api/auth/callback",
 ]
 
 [app_proxy]
-url = "https://creation-dts-bike-headed.trycloudflare.com/api/consent"
+url = "https://shopterm-production.up.railway.app/api/consent"
 subpath = "tc-consent"
 prefix = "apps"
 

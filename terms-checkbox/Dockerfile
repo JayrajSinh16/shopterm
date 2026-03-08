@@ -33,7 +33,7 @@ COPY package.json ./
 COPY start.sh ./
 RUN chmod +x start.sh
 
-# Railway injects $PORT at runtime; expose it here for documentation
-EXPOSE 3000
+# Railway injects PORT=8080 at runtime
+EXPOSE 8080
 
 CMD ["sh", "start.sh"]
