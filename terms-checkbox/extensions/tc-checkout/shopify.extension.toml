@@ -44,21 +44,3 @@ handle = "tc-checkout"
     key = "required"
     type = "boolean"
     name = "Required to complete checkout"
-
-    [[extensions.settings.fields]]
-    key = "font_size"
-    type = "single_line_text_field"
-    name = "Font size"
-    description = "Options: extraSmall, small, medium, large, extraLarge. Default: small"
-
-    [[extensions.settings.fields]]
-    key = "font_appearance"
-    type = "single_line_text_field"
-    name = "Text appearance"
-    description = "Options: default, subdued, accent, info, success, warning, critical. Default: default"
-
-    [[extensions.settings.fields]]
-    key = "link_appearance"
-    type = "single_line_text_field"
-    name = "Link style"
-    description = "Options: default (themed link color), monochrome (matches text color). Default: default"

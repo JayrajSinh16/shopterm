@@ -19,9 +19,6 @@ export default reactExtension(
   () => <TermsCheckbox />
 );
 
-const VALID_SIZES = ["extraSmall", "small", "medium", "large", "extraLarge"];
-const VALID_APPEARANCES = ["subdued", "accent", "info", "success", "warning", "critical"];
-
 function TermsCheckbox() {
   const [checked, setChecked] = useState(false);
   const [validationError, setValidationError] = useState("");
@@ -36,9 +33,6 @@ function TermsCheckbox() {
     link_url,
     error_message,
     required,
-    font_size,
-    font_appearance,
-    link_appearance,
   } = useSettings();
 
   const messageText = message_text || "I agree to the";
@@ -50,9 +44,10 @@ function TermsCheckbox() {
 
   const isRequired = required !== false && required !== "false";
 
-  const size = VALID_SIZES.includes(font_size) ? font_size : "small";
-  const textAppearance = VALID_APPEARANCES.includes(font_appearance) ? font_appearance : undefined;
-  const linkStyle = link_appearance === "monochrome" ? "monochrome" : undefined;
+  // Hardcoded defaults — appearance customization is a Pro feature
+  const size = "small";
+  const textAppearance = undefined;
+  const linkStyle = undefined;
 
   const isRequiredRef = useRef(isRequired);
   isRequiredRef.current = isRequired;
