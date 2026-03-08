@@ -1,0 +1,25 @@
+# Random files
+*.webp
+*.png
+*.jpg
+
+# Env files
+.env
+.env.local
+
+# Node
+node_modules/
+
+# Build outputs
+build/
+dist/
+
+# SQLite dev databases
+*.db
+*.db-journal
+
+# Shopify CLI
+.shopify/
+
+# OS
+.DS_Store

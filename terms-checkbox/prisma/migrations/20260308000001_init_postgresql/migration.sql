@@ -1,11 +1,11 @@
--- CreateTable
+-- CreateTable: Shopify session storage (required by shopify-app-remix)
 CREATE TABLE "Session" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "shop" TEXT NOT NULL,
     "state" TEXT NOT NULL,
     "isOnline" BOOLEAN NOT NULL DEFAULT false,
     "scope" TEXT,
-    "expires" DATETIME,
+    "expires" TIMESTAMP(3),
     "accessToken" TEXT NOT NULL,
     "userId" BIGINT,
     "firstName" TEXT,
@@ -14,12 +14,15 @@ CREATE TABLE "Session" (
     "accountOwner" BOOLEAN NOT NULL DEFAULT false,
     "locale" TEXT,
     "collaborator" BOOLEAN DEFAULT false,
-    "emailVerified" BOOLEAN DEFAULT false
+    "emailVerified" BOOLEAN DEFAULT false,
+    "refreshToken" TEXT,
+    "refreshTokenExpires" TIMESTAMP(3),
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+-- CreateTable: Per-store app configuration
 CREATE TABLE "AppSettings" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "shop" TEXT NOT NULL,
     "enabled" BOOLEAN NOT NULL DEFAULT true,
     "checkboxRequired" BOOLEAN NOT NULL DEFAULT true,
@@ -33,13 +36,18 @@ CREATE TABLE "AppSettings" (
     "errorColor" TEXT NOT NULL DEFAULT '#dc3545',
     "logConsent" BOOLEAN NOT NULL DEFAULT true,
     "blockExpressCheckout" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "fontColor" TEXT NOT NULL DEFAULT '#333333',
+    "linkColor" TEXT NOT NULL DEFAULT '#2c6ecb',
+    "linkUnderline" BOOLEAN NOT NULL DEFAULT true,
+    "plan" TEXT NOT NULL DEFAULT 'free',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    CONSTRAINT "AppSettings_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
+-- CreateTable: Consent records
 CREATE TABLE "ConsentLog" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "shop" TEXT NOT NULL,
     "customerId" TEXT,
     "customerEmail" TEXT,
@@ -49,7 +57,8 @@ CREATE TABLE "ConsentLog" (
     "consentGiven" BOOLEAN NOT NULL DEFAULT true,
     "pageUrl" TEXT,
     "checkboxVersion" TEXT,
-    "timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "timestamp" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "ConsentLog_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

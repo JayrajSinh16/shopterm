@@ -1,96 +1,116 @@
-# Deployment Guide
+# Deployment Guide — Railway
 
-## Option A: Fly.io (Recommended)
-
-### 1. Install Fly CLI
-```bash
-curl -L https://fly.io/install.sh | sh
-fly auth login
-```
-
-### 2. Launch app
-```bash
-fly launch
-# Follow prompts — it will detect Node.js automatically
-```
-
-### 3. Set secrets
-```bash
-fly secrets set DATABASE_URL="postgresql://user:pass@host:5432/dbname"
-fly secrets set SHOPIFY_API_KEY="your_api_key"
-fly secrets set SHOPIFY_API_SECRET="your_api_secret"
-fly secrets set SHOPIFY_APP_URL="https://your-app.fly.dev"
-```
-
-### 4. Update Prisma for PostgreSQL
-In `prisma/schema.prisma`, change:
-```prisma
-datasource db {
-  provider = "postgresql"   # was "sqlite"
-  url      = env("DATABASE_URL")
-}
-```
-
-### 5. Deploy
-```bash
-fly deploy
-fly ssh console -C "npx prisma migrate deploy"
-```
+## Prerequisites
+- [Railway account](https://railway.app) (free $5/month credit)
+- [Railway CLI](https://docs.railway.app/guides/cli): `npm install -g @railway/cli`
+- Production URL from Railway (shown after first deploy)
 
 ---
 
-## Option B: Railway
-
-1. Connect your GitHub repository at [railway.app](https://railway.app)
-2. Add a PostgreSQL database service
-3. Set environment variables in the Railway dashboard
-4. Deploy runs automatically on git push
+## Step 1 — Push your code to GitHub
+The repo must be on GitHub. Railway deploys directly from it.
 
 ---
 
-## Option C: Render
+## Step 2 — Create a Railway project
 
-1. Create a new Web Service at [render.com](https://render.com)
-2. Connect your repository
-3. Set build command: `npm install && npx prisma generate`
-4. Set start command: `npm run start`
-5. Set environment variables
-6. Add a PostgreSQL database
+1. Go to [railway.app/new](https://railway.app/new)
+2. Click **Deploy from GitHub repo** → select `JayrajSinh16/shopterm`
+3. Set the **Root Directory** to `terms-checkbox`
+4. Railway will detect the `Dockerfile` automatically
 
 ---
 
-## After Deploying
+## Step 3 — Add a PostgreSQL database
 
-### Update Shopify Partners Dashboard
-1. App URL → `https://your-production-url.com`
-2. Redirect URLs → add `https://your-production-url.com/auth/callback`
-3. App Proxy URL → `https://your-production-url.com/api/consent`
+1. In your Railway project, click **+ New** → **Database** → **PostgreSQL**
+2. Railway automatically injects `DATABASE_URL` into your app — nothing to configure
 
-### Update shopify.app.toml
+---
+
+## Step 4 — Set environment variables
+
+In Railway → your app service → **Variables**, add:
+
+```
+SHOPIFY_API_KEY=your_key_from_partners_dashboard
+SHOPIFY_API_SECRET=your_secret_from_partners_dashboard
+SHOPIFY_APP_URL=https://your-app.up.railway.app
+HOST=https://your-app.up.railway.app
+SCOPES=read_orders,read_customers
+NODE_ENV=production
+```
+
+> `DATABASE_URL` is auto-injected by the Postgres service — do not set it manually.
+
+---
+
+## Step 5 — Get your Railway URL
+
+After the first deploy completes, Railway gives you a public URL like:
+`https://terms-checkbox-production-xxxx.up.railway.app`
+
+Use this as your `SHOPIFY_APP_URL` and `HOST` above.
+
+---
+
+## Step 6 — Update Shopify Partners Dashboard
+
+Go to [partners.shopify.com](https://partners.shopify.com) → your app → **App setup**:
+
+| Field | Value |
+|---|---|
+| App URL | `https://your-app.up.railway.app` |
+| Allowed redirect URLs | `https://your-app.up.railway.app/auth/callback` `https://your-app.up.railway.app/auth/shopify/callback` `https://your-app.up.railway.app/api/auth/callback` |
+| App Proxy URL | `https://your-app.up.railway.app/api/consent` |
+
+---
+
+## Step 7 — Update shopify.app.toml
+
 ```toml
-application_url = "https://your-production-url.com"
+application_url = "https://your-app.up.railway.app"
 
 [auth]
 redirect_urls = [
-  "https://your-production-url.com/auth/callback",
-  "https://your-production-url.com/auth/shopify/callback",
+  "https://your-app.up.railway.app/auth/callback",
+  "https://your-app.up.railway.app/auth/shopify/callback",
+  "https://your-app.up.railway.app/api/auth/callback",
 ]
 
 [app_proxy]
-url = "https://your-production-url.com/api/consent"
+url = "https://your-app.up.railway.app/api/consent"
 ```
 
-### Deploy Theme Extension
+Then run:
 ```bash
+shopify app config push
+```
+
+---
+
+## Step 8 — Deploy the theme extension
+
+```bash
+cd terms-checkbox
 shopify app deploy
 ```
 
-### Run Production Migrations
-```bash
-# Fly.io
-fly ssh console -C "npx prisma migrate deploy"
+This deploys the theme block and checkout extension to Shopify's CDN.
 
-# Railway / Render
-# Set the following as a release command:
-# npx prisma migrate deploy
+---
+
+## How deploys work after setup
+
+Every `git push` to `main` triggers a Railway redeploy automatically.
+Migrations run automatically on startup via the Dockerfile CMD:
 ```
+npx prisma migrate deploy && npm run start
+```
+
+---
+
+## Verify deployment
+
+- Health check: `https://your-app.up.railway.app/health` → should return `OK`
+- Install on dev store and verify billing, settings, and consent logging work
