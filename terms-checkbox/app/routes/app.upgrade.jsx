@@ -62,9 +62,6 @@ export default function Upgrade() {
                   <List.Item>
                     Checkbox version snapshot — stores exact message text at time of consent
                   </List.Item>
-                  <List.Item>
-                    Checkout extension support (Shopify Plus)
-                  </List.Item>
                   <List.Item>Priority support</List.Item>
                 </List>
               </BlockStack>
@@ -91,6 +88,8 @@ export default function Upgrade() {
                 <List.Item>Custom message text &amp; T&amp;C link</List.Item>
                 <List.Item>Block express checkout buttons</List.Item>
                 <List.Item>Works with drawer/slide-out carts</List.Item>
+                <List.Item>Cart attributes for order-level audit trail</List.Item>
+                <List.Item>Checkout extension (Shopify Plus)</List.Item>
                 <List.Item>50 consent logs (rolling, oldest deleted)</List.Item>
                 <List.Item>Basic position options (above / below checkout)</List.Item>
               </List>
