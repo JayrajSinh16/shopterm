@@ -26,12 +26,12 @@
   data-link-text="{{ block.settings.link_text | escape }}"
   data-link-url="{{ block.settings.link_url | escape }}"
   style="
-    --tc-checkbox-color: {{ block.settings.checkbox_color }};
-    --tc-error-color: {{ block.settings.error_color }};
-    --tc-font-size: {{ block.settings.font_size }}px;
-    --tc-text-color: {{ block.settings.font_color }};
-    --tc-link-color: {{ block.settings.link_color }};
-    --tc-link-underline: {% if block.settings.link_underline %}underline{% else %}none{% endif %};
+    --tc-checkbox-color: #000000;
+    --tc-error-color: #dc3545;
+    --tc-font-size: 14px;
+    --tc-text-color: #333333;
+    --tc-link-color: #2c6ecb;
+    --tc-link-underline: underline;
     --tc-max-width: 100%;
     display: none;
   "
@@ -136,47 +136,11 @@
     },
     {
       "type": "header",
-      "content": "Appearance"
+      "content": "⭐ Appearance"
     },
     {
-      "type": "range",
-      "id": "font_size",
-      "label": "Font size",
-      "min": 10,
-      "max": 24,
-      "step": 1,
-      "default": 14,
-      "unit": "px"
-    },
-    {
-      "type": "color",
-      "id": "checkbox_color",
-      "label": "Checkbox accent colour",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "error_color",
-      "label": "Error message colour",
-      "default": "#dc3545"
-    },
-    {
-      "type": "color",
-      "id": "font_color",
-      "label": "Label text colour",
-      "default": "#333333"
-    },
-    {
-      "type": "color",
-      "id": "link_color",
-      "label": "Link colour",
-      "default": "#2c6ecb"
-    },
-    {
-      "type": "checkbox",
-      "id": "link_underline",
-      "label": "Underline the T&C link",
-      "default": true
+      "type": "paragraph",
+      "content": "Customize colours, font size, and more in the app settings. Requires the Pro plan."
     }
   ]
 }
