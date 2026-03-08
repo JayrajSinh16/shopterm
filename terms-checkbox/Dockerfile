@@ -18,6 +18,7 @@ ENV SHOPIFY_API_SECRET=$SHOPIFY_API_SECRET
 
 RUN npx prisma generate
 RUN npm run build
+RUN mkdir -p /app/public
 
 # ── Stage 3: Production runner ────────────────────────────────────────────────
 FROM node:20-alpine AS runner
