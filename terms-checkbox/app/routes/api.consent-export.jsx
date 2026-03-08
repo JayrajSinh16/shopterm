@@ -8,10 +8,19 @@
 
 import { authenticate } from "../shopify.server";
 import { exportLogs } from "../models/ConsentLog.server";
+import { getPlan, PLANS } from "../models/Subscription.server";
 
 export async function loader({ request }) {
   const { session } = await authenticate.admin(request);
   const shop = session.shop;
+
+  const plan = await getPlan(shop);
+  if (plan !== PLANS.PRO) {
+    return new Response(
+      JSON.stringify({ error: "CSV export requires the Pro plan. Upgrade at /app/upgrade." }),
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    );
+  }
 
   const url = new URL(request.url);
   const dateFrom = url.searchParams.get("dateFrom") || "";

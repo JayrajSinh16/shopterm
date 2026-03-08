@@ -52,6 +52,7 @@ model AppSettings {
   fontColor            String   @default("#333333")
   linkColor            String   @default("#2c6ecb")
   linkUnderline        Boolean  @default(true)
+  plan                 String   @default("free")
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }

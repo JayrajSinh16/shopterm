@@ -2,6 +2,7 @@ import "@shopify/shopify-app-remix/adapters/node";
 import {
   ApiVersion,
   AppDistribution,
+  BillingInterval,
   shopifyApp,
 } from "@shopify/shopify-app-remix/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
@@ -21,6 +22,13 @@ const shopify = shopifyApp({
   distribution: AppDistribution.AppStore,
   future: {
     unstable_newEmbeddedAuthStrategy: true,
+  },
+  billing: {
+    "Pro Plan": {
+      amount: 4.98,
+      currencyCode: "USD",
+      interval: BillingInterval.Every30Days,
+    },
   },
   webhooks: {
     APP_UNINSTALLED: {

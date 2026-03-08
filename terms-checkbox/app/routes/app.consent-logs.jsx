@@ -16,27 +16,34 @@ import {
   TextField,
   Select,
   Divider,
+  Banner,
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { getLogs } from "../models/ConsentLog.server";
+import { getPlan, PLANS, FREE_LOG_LIMIT } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
   const shop = session.shop;
   const url = new URL(request.url);
 
+  const plan = await getPlan(shop);
+  const isPro = plan === PLANS.PRO;
+
   const page = parseInt(url.searchParams.get("page") || "1", 10);
-  const email = url.searchParams.get("email") || "";
-  const dateFrom = url.searchParams.get("dateFrom") || "";
-  const dateTo = url.searchParams.get("dateTo") || "";
+  // Free plan: no filter support, cap at FREE_LOG_LIMIT
+  const email = isPro ? (url.searchParams.get("email") || "") : "";
+  const dateFrom = isPro ? (url.searchParams.get("dateFrom") || "") : "";
+  const dateTo = isPro ? (url.searchParams.get("dateTo") || "") : "";
+  const limit = isPro ? 25 : FREE_LOG_LIMIT;
 
-  const result = await getLogs(shop, { page, limit: 25, dateFrom, dateTo, email });
+  const result = await getLogs(shop, { page: isPro ? page : 1, limit, dateFrom, dateTo, email });
 
-  return json({ ...result, filters: { email, dateFrom, dateTo } });
+  return json({ ...result, filters: { email, dateFrom, dateTo }, isPro });
 };
 
 export default function ConsentLogs() {
-  const { logs, total, page, totalPages, filters } = useLoaderData();
+  const { logs, total, page, totalPages, filters, isPro } = useLoaderData();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -72,49 +79,67 @@ export default function ConsentLogs() {
       title="Consent Logs"
       backAction={{ content: "Dashboard", url: "/app" }}
       subtitle={`${total} total records`}
-      primaryAction={{
+      primaryAction={isPro ? {
         content: "Export CSV",
         url: "/api/consent-export",
         target: "_blank",
-      }}
+      } : undefined}
     >
       <Layout>
+        {/* Free plan notice */}
+        {!isPro && (
+          <Layout.Section>
+            <Banner
+              title={`Free plan: showing last ${FREE_LOG_LIMIT} logs`}
+              tone="warning"
+              action={{ content: "Upgrade to Pro", url: "/app/upgrade" }}
+            >
+              <p>
+                Filters, CSV export, and unlimited log storage are Pro features.
+                Upgrade to access full consent history.
+              </p>
+            </Banner>
+          </Layout.Section>
+        )}
+
         <Layout.Section>
-          {/* Filters */}
-          <Card>
-            <BlockStack gap="400">
-              <Text variant="headingMd">Filters</Text>
-              <InlineStack gap="300" wrap align="start">
-                <TextField
-                  label="Customer email"
-                  value={emailFilter}
-                  onChange={setEmailFilter}
-                  placeholder="Search by email..."
-                  clearButton
-                  onClearButtonClick={() => setEmailFilter("")}
-                  autoComplete="off"
-                />
-                <TextField
-                  label="Date from"
-                  type="date"
-                  value={dateFrom}
-                  onChange={setDateFrom}
-                  autoComplete="off"
-                />
-                <TextField
-                  label="Date to"
-                  type="date"
-                  value={dateTo}
-                  onChange={setDateTo}
-                  autoComplete="off"
-                />
-              </InlineStack>
-              <InlineStack gap="200">
-                <Button variant="primary" onClick={applyFilters}>Apply Filters</Button>
-                <Button onClick={clearFilters}>Clear</Button>
-              </InlineStack>
-            </BlockStack>
-          </Card>
+          {/* Filters — Pro only */}
+          {isPro && (
+            <Card>
+              <BlockStack gap="400">
+                <Text variant="headingMd">Filters</Text>
+                <InlineStack gap="300" wrap align="start">
+                  <TextField
+                    label="Customer email"
+                    value={emailFilter}
+                    onChange={setEmailFilter}
+                    placeholder="Search by email..."
+                    clearButton
+                    onClearButtonClick={() => setEmailFilter("")}
+                    autoComplete="off"
+                  />
+                  <TextField
+                    label="Date from"
+                    type="date"
+                    value={dateFrom}
+                    onChange={setDateFrom}
+                    autoComplete="off"
+                  />
+                  <TextField
+                    label="Date to"
+                    type="date"
+                    value={dateTo}
+                    onChange={setDateTo}
+                    autoComplete="off"
+                  />
+                </InlineStack>
+                <InlineStack gap="200">
+                  <Button variant="primary" onClick={applyFilters}>Apply Filters</Button>
+                  <Button onClick={clearFilters}>Clear</Button>
+                </InlineStack>
+              </BlockStack>
+            </Card>
+          )}
         </Layout.Section>
 
         <Layout.Section>
@@ -137,33 +162,37 @@ export default function ConsentLogs() {
                   headings={["Date & Time", "Customer", "Cart Token", "Status", "Page"]}
                   rows={rows}
                 />
-                <Divider />
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "12px 16px",
-                  }}
-                >
-                  <Text tone="subdued">
-                    Showing {(page - 1) * 25 + 1}–{Math.min(page * 25, total)} of {total}
-                  </Text>
-                  <Pagination
-                    hasPrevious={page > 1}
-                    hasNext={page < totalPages}
-                    onPrevious={() => {
-                      const p = new URLSearchParams(searchParams);
-                      p.set("page", String(page - 1));
-                      setSearchParams(p);
-                    }}
-                    onNext={() => {
-                      const p = new URLSearchParams(searchParams);
-                      p.set("page", String(page + 1));
-                      setSearchParams(p);
-                    }}
-                  />
-                </div>
+                {isPro && (
+                  <>
+                    <Divider />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "12px 16px",
+                      }}
+                    >
+                      <Text tone="subdued">
+                        Showing {(page - 1) * 25 + 1}–{Math.min(page * 25, total)} of {total}
+                      </Text>
+                      <Pagination
+                        hasPrevious={page > 1}
+                        hasNext={page < totalPages}
+                        onPrevious={() => {
+                          const p = new URLSearchParams(searchParams);
+                          p.set("page", String(page - 1));
+                          setSearchParams(p);
+                        }}
+                        onNext={() => {
+                          const p = new URLSearchParams(searchParams);
+                          p.set("page", String(page + 1));
+                          setSearchParams(p);
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
               </>
             )}
           </Card>

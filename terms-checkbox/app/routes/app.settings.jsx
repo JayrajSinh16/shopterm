@@ -23,11 +23,15 @@ import {
 import { authenticate } from "../shopify.server";
 import { getSettings, updateSettings } from "../models/Settings.server";
 import { CheckboxPreview } from "../components/CheckboxPreview";
+import { getPlan, PLANS } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
-  const settings = await getSettings(session.shop);
-  return json({ settings });
+  const [settings, plan] = await Promise.all([
+    getSettings(session.shop),
+    getPlan(session.shop),
+  ]);
+  return json({ settings, isPro: plan === PLANS.PRO });
 };
 
 export const action = async ({ request }) => {
@@ -61,7 +65,7 @@ export const action = async ({ request }) => {
 };
 
 export default function Settings() {
-  const { settings } = useLoaderData();
+  const { settings, isPro } = useLoaderData();
   const actionData = useActionData();
   const submit = useSubmit();
   const navigation = useNavigation();
@@ -99,12 +103,6 @@ export default function Settings() {
     Object.entries(form).forEach(([k, v]) => fd.append(k, String(v)));
     submit(fd, { method: "post" });
   }, [form, submit]);
-
-  const positionOptions = [
-    { label: "Above checkout button", value: "above_checkout" },
-    { label: "Below checkout button", value: "below_checkout" },
-    { label: "Custom position (App Block)", value: "custom" },
-  ];
 
   return (
     <Frame>
@@ -189,14 +187,34 @@ export default function Settings() {
               {/* Appearance */}
               <Card>
                 <BlockStack gap="400">
-                  <Text variant="headingMd">Appearance</Text>
+                  <InlineStack align="space-between" blockAlign="center">
+                    <Text variant="headingMd">Appearance</Text>
+                    {!isPro && (
+                      <Button variant="plain" url="/app/upgrade" size="slim">
+                        ⭐ Pro only — Upgrade
+                      </Button>
+                    )}
+                  </InlineStack>
+
+                  {!isPro && (
+                    <Banner tone="warning">
+                      Appearance customization (colors, font size, link style) is a Pro feature.
+                      Position and basic settings below are available on all plans.
+                    </Banner>
+                  )}
+
                   <Select
                     label="Checkbox position"
-                    options={positionOptions}
+                    options={[
+                      { label: "Above checkout button", value: "above_checkout" },
+                      { label: "Below checkout button", value: "below_checkout" },
+                      { label: "Custom position (App Block) — Pro", value: "custom", disabled: !isPro },
+                    ]}
                     value={form.position}
                     onChange={(v) => set("position", v)}
-                    helpText="Where the checkbox appears relative to the checkout button. For full control, select 'Custom' and use the Theme Editor App Block."
+                    helpText="Where the checkbox appears relative to the checkout button."
                   />
+
                   <RangeSlider
                     label={`Font size: ${form.fontSize}px`}
                     value={form.fontSize}
@@ -205,6 +223,7 @@ export default function Settings() {
                     step={1}
                     onChange={(v) => set("fontSize", v)}
                     output
+                    disabled={!isPro}
                   />
                   <FormLayout>
                     <FormLayout.Group>
@@ -213,6 +232,7 @@ export default function Settings() {
                         value={form.checkboxColor}
                         onChange={(v) => set("checkboxColor", v)}
                         helpText="Background & border color when checked"
+                        disabled={!isPro}
                         prefix={
                           <span style={{ display: "inline-block", width: 16, height: 16, borderRadius: 3, background: form.checkboxColor, border: "1px solid #ccc" }} />
                         }
@@ -222,6 +242,7 @@ export default function Settings() {
                         value={form.errorColor}
                         onChange={(v) => set("errorColor", v)}
                         helpText="Hex color for the error text"
+                        disabled={!isPro}
                         prefix={
                           <span style={{ display: "inline-block", width: 16, height: 16, borderRadius: 3, background: form.errorColor, border: "1px solid #ccc" }} />
                         }
@@ -233,6 +254,7 @@ export default function Settings() {
                         value={form.fontColor}
                         onChange={(v) => set("fontColor", v)}
                         helpText="Color of the checkbox label text"
+                        disabled={!isPro}
                         prefix={
                           <span style={{ display: "inline-block", width: 16, height: 16, borderRadius: 3, background: form.fontColor, border: "1px solid #ccc" }} />
                         }
@@ -242,6 +264,7 @@ export default function Settings() {
                         value={form.linkColor}
                         onChange={(v) => set("linkColor", v)}
                         helpText="Color of the T&C hyperlink"
+                        disabled={!isPro}
                         prefix={
                           <span style={{ display: "inline-block", width: 16, height: 16, borderRadius: 3, background: form.linkColor, border: "1px solid #ccc" }} />
                         }
@@ -251,6 +274,7 @@ export default function Settings() {
                       label="Underline the T&C link"
                       checked={form.linkUnderline}
                       onChange={(v) => set("linkUnderline", v)}
+                      disabled={!isPro}
                     />
                   </FormLayout>
                 </BlockStack>
@@ -259,16 +283,33 @@ export default function Settings() {
               {/* Consent logging */}
               <Card>
                 <BlockStack gap="400">
-                  <Text variant="headingMd">Consent Logging</Text>
-                  <Checkbox
-                    label="Log date & time when checkbox is checked"
-                    checked={form.logConsent}
-                    onChange={(v) => set("logConsent", v)}
-                  />
-                  <Banner tone="info">
-                    Consent logs record the timestamp, customer info, and cart token
-                    each time a customer agrees. Required for GDPR/CCPA compliance records.
-                  </Banner>
+                  <InlineStack align="space-between" blockAlign="center">
+                    <Text variant="headingMd">Consent Logging</Text>
+                    {!isPro && (
+                      <Button variant="plain" url="/app/upgrade" size="slim">
+                        ⭐ Pro only — Upgrade
+                      </Button>
+                    )}
+                  </InlineStack>
+                  {isPro ? (
+                    <>
+                      <Checkbox
+                        label="Log date & time when checkbox is checked"
+                        checked={form.logConsent}
+                        onChange={(v) => set("logConsent", v)}
+                      />
+                      <Banner tone="info">
+                        Consent logs record the timestamp, customer info, and cart token
+                        each time a customer agrees. Required for GDPR/CCPA compliance records.
+                      </Banner>
+                    </>
+                  ) : (
+                    <Banner tone="warning">
+                      Consent logging is a Pro feature. Upgrade to store unlimited records
+                      with IP address, user agent, and cart token capture for compliance.
+                      On the Free plan, only the last 50 logs are stored.
+                    </Banner>
+                  )}
                 </BlockStack>
               </Card>
             </BlockStack>

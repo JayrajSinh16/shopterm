@@ -15,7 +15,8 @@
 import { json } from "@remix-run/node";
 import crypto from "crypto";
 import { authenticate } from "../shopify.server";
-import { createLog, getLogs } from "../models/ConsentLog.server";
+import { createLog, getLogs, enforceLogLimit } from "../models/ConsentLog.server";
+import { getPlan, PLANS, FREE_LOG_LIMIT } from "../models/Subscription.server";
 
 // ── POST: Log consent (called from storefront via App Proxy OR checkout extension) ──
 export async function action({ request }) {
@@ -56,18 +57,31 @@ export async function action({ request }) {
   }
 
   try {
+    const plan = await getPlan(shop);
+    const isProPlan = plan === PLANS.PRO;
+
     const log = await createLog({
       shop,
       customerId: customerId || null,
       customerEmail: customerEmail || null,
       cartToken: cartToken || null,
-      ipAddress:
-        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null,
-      userAgent: request.headers.get("user-agent") || null,
+      // Free plan: no IP or user agent capture
+      ipAddress: isProPlan
+        ? (request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null)
+        : null,
+      userAgent: isProPlan
+        ? (request.headers.get("user-agent") || null)
+        : null,
       consentGiven,
       pageUrl: pageUrl || null,
-      checkboxVersion: checkboxVersion || null,
+      // Free plan: no version snapshot stored
+      checkboxVersion: isProPlan ? (checkboxVersion || null) : null,
     });
+
+    // Free plan: enforce rolling 50-log limit (fire-and-forget)
+    if (!isProPlan) {
+      enforceLogLimit(shop, FREE_LOG_LIMIT).catch(() => {});
+    }
 
     return json({ success: true, id: log.id });
   } catch (err) {

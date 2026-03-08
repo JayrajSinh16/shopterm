@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   Page,
@@ -12,10 +12,16 @@ import {
 } from "@shopify/polaris";
 import { authenticate } from "../shopify.server";
 import { getTodayCount, getTotalCount, getWeeklyTrend } from "../models/Analytics.server";
+import { getPlan, PLANS } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
   const shop = session.shop;
+
+  const plan = await getPlan(shop);
+  if (plan !== PLANS.PRO) {
+    return redirect("/app/upgrade");
+  }
 
   const [todayCount, totalCount, weeklyTrend] = await Promise.all([
     getTodayCount(shop),

@@ -78,6 +78,27 @@ export async function getCustomerLogs(shop, email) {
 
 // --- Helpers ---
 
+/**
+ * Enforce a rolling log limit for free-tier shops.
+ * Deletes the oldest records so the total stays at or below `limit`.
+ * @param {string} shop
+ * @param {number} limit
+ */
+export async function enforceLogLimit(shop, limit = 50) {
+  const count = await db.consentLog.count({ where: { shop } });
+  if (count > limit) {
+    const excess = await db.consentLog.findMany({
+      where: { shop },
+      orderBy: { timestamp: "asc" },
+      take: count - limit,
+      select: { id: true },
+    });
+    await db.consentLog.deleteMany({
+      where: { id: { in: excess.map((l) => l.id) } },
+    });
+  }
+}
+
 function buildWhere(shop, { dateFrom, dateTo, email } = {}) {
   const where = { shop };
 

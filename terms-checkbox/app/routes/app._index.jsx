@@ -19,23 +19,26 @@ import {
 import { authenticate } from "../shopify.server";
 import { getSettings } from "../models/Settings.server";
 import { getTodayCount, getTotalCount, getRecentLogs } from "../models/Analytics.server";
+import { getPlan, PLANS, FREE_LOG_LIMIT } from "../models/Subscription.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
   const shop = session.shop;
 
-  const [settings, todayCount, totalCount, recentLogs] = await Promise.all([
+  const [settings, todayCount, totalCount, recentLogs, plan] = await Promise.all([
     getSettings(shop),
     getTodayCount(shop),
     getTotalCount(shop),
     getRecentLogs(shop, 5),
+    getPlan(shop),
   ]);
 
-  return json({ settings, todayCount, totalCount, recentLogs, shop });
+  const isPro = plan === PLANS.PRO;
+  return json({ settings, todayCount, totalCount, recentLogs, shop, isPro });
 };
 
 export default function Dashboard() {
-  const { settings, todayCount, totalCount, recentLogs, shop } = useLoaderData();
+  const { settings, todayCount, totalCount, recentLogs, shop, isPro } = useLoaderData();
   const navigate = useNavigate();
 
   const setupSteps = [
@@ -74,6 +77,22 @@ export default function Dashboard() {
   return (
     <Page title="Terms & Conditions Checkbox">
       <Layout>
+        {/* Free plan upgrade banner */}
+        {!isPro && (
+          <Layout.Section>
+            <Banner
+              title="You're on the Free plan"
+              tone="warning"
+              action={{ content: "Upgrade to Pro — $4.98/mo", url: "/app/upgrade" }}
+            >
+              <p>
+                Consent logs are capped at {FREE_LOG_LIMIT} (oldest deleted when full). Upgrade to
+                unlock unlimited logs, CSV export, analytics, appearance customization, and more.
+              </p>
+            </Banner>
+          </Layout.Section>
+        )}
+
         {/* Status + Stats Row */}
         <Layout.Section>
           <InlineStack gap="400" align="start" wrap>
