@@ -15,7 +15,7 @@
 
 ---
 
-## Pro ($4.98/month)
+## Pro ($4.00/month)
 
 Everything in Free, plus:
 

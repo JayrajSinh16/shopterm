@@ -30,7 +30,7 @@ export default function Upgrade() {
                     <Badge tone="success">Recommended</Badge>
                   </InlineStack>
                   <InlineStack gap="100" blockAlign="baseline">
-                    <Text variant="heading2xl" as="p">$4.98</Text>
+                    <Text variant="heading2xl" as="p">$4.00</Text>
                     <Text tone="subdued">/ month</Text>
                   </InlineStack>
                 </BlockStack>

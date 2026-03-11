@@ -25,7 +25,7 @@ const shopify = shopifyApp({
   },
   billing: {
     "Pro Plan": {
-      amount: 4.98,
+      amount: 4.00,
       currencyCode: "USD",
       interval: BillingInterval.Every30Days,
     },

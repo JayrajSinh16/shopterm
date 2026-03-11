@@ -84,7 +84,7 @@ export default function Dashboard() {
             <Banner
               title="You're on the Free plan"
               tone="warning"
-              action={{ content: "Upgrade to Pro — $4.98/mo", url: "/app/upgrade" }}
+              action={{ content: "Upgrade to Pro — $4/mo", url: "/app/upgrade" }}
             >
               <p>
                 Consent logs are capped at {FREE_LOG_LIMIT} (oldest deleted when full). Upgrade to
