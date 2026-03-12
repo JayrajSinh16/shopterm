@@ -67,7 +67,7 @@ export default function Upgrade() {
               </BlockStack>
 
               <Banner tone="info">
-                Includes a 7-day free trial. Cancel any time from your Shopify Billing settings.
+                Cancel any time from your Shopify Billing settings.
               </Banner>
             </BlockStack>
           </Card>
